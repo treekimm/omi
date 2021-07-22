@@ -19,6 +19,6 @@ public class HomeController extends BaseController{
 		
 		HomeResponseDTO resultDTO = new HomeResponseDTO();
 		
-		return responseView(request, "/");
+		return responseView(request, "/home");
 	}
 }
