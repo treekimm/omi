@@ -5,6 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.tree.omi.common.annotation.ApidocAnnotation;
+
+@ApidocAnnotation
 @Controller
 public abstract class BaseController {
 	public ModelAndView responseView(HttpServletRequest request, BaseDTO baseDTO) {

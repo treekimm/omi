@@ -11,6 +11,8 @@
 </h1>
 <a href="javascript:test();"> hi </a>
 
+<h1><a href="/apidoc">GO API DOC</a></h1>
+
 <input id="test" />
 
 </body>
