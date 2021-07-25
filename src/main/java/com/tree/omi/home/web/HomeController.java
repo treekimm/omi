@@ -12,12 +12,11 @@ import com.tree.omi.common.base.BaseController;
 import com.tree.omi.home.vo.HomeRequestDTO;
 import com.tree.omi.home.vo.HomeResponseDTO;
 
-
+@ApidocAnnotation
 @Controller("HomeController")
 public class HomeController extends BaseController{
 
 	@RequestMapping("/")
-	@ApidocAnnotation
 	public ModelAndView home (HomeRequestDTO requestDTO, HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
 		
 		HomeResponseDTO resultDTO = new HomeResponseDTO();
