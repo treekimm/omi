@@ -23,7 +23,6 @@ public class ApidocController extends BaseController{
 	
 	@RequestMapping(value = "/apidoc")
 	public ModelAndView apidoc(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView)throws Exception {
-		apidocService.printApiList();
 
 		return responseView(request, "/apidoc/apidoc");
 	}

@@ -31,8 +31,11 @@ public class ApidocServiceImpl implements ApidocService {
 	@Override
 	public ArrayList<String> getApiName() throws Exception {
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
+//		ControllerFilter myFilter = new ControllerFilter();
+//		scanner.addExcludeFilter(myFilter);
 		
 		Set<BeanDefinition> packageSet = new HashSet();
+		
 		packageSet = scanner.findCandidateComponents("/com/tree/omi");
 		
 		List<String> apiNameList = new ArrayList<String>();
@@ -42,6 +45,7 @@ public class ApidocServiceImpl implements ApidocService {
 		for(BeanDefinition clss : packageSet) {
 			tempApiNameList = clss.getBeanClassName().split("\\.");
 			apiName = tempApiNameList[tempApiNameList.length-1];
+//			apiNameList.add(apiName);
 			
 			if(apiName.indexOf("Controller") > -1) {
 				apiNameList.add(apiName);
