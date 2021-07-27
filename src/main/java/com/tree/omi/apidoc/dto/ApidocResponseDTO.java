@@ -1,18 +1,18 @@
 package com.tree.omi.apidoc.dto;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.tree.omi.common.base.BaseDTO;
 
 public class ApidocResponseDTO extends BaseDTO{
 
-	private ArrayList<String> apiList ;
+	private List<String> apiList ;
 
-	public ArrayList<String> getApiList() {
+	public List<String> getApiList() {
 		return apiList;
 	}
 
-	public void setApiList(ArrayList<String> apiList) {
+	public void setApiList(List<String> apiList) {
 		this.apiList = apiList;
 	}
 }

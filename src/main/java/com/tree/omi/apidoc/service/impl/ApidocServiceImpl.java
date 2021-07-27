@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ClassPathScanningCandidateComponen
 import org.springframework.stereotype.Service;
 
 import com.tree.omi.apidoc.service.ApidocService;
+import com.tree.omi.common.filter.ControllerFilter;
 
 @Service("ApidocService")
 public class ApidocServiceImpl implements ApidocService {
@@ -29,10 +30,10 @@ public class ApidocServiceImpl implements ApidocService {
 	}
 
 	@Override
-	public ArrayList<String> getApiName() throws Exception {
+	public List<String> getApiName() throws Exception {
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
-//		ControllerFilter myFilter = new ControllerFilter();
-//		scanner.addExcludeFilter(myFilter);
+		ControllerFilter myFilter = new ControllerFilter();
+		scanner.addExcludeFilter(myFilter);
 		
 		Set<BeanDefinition> packageSet = new HashSet();
 		
@@ -45,14 +46,10 @@ public class ApidocServiceImpl implements ApidocService {
 		for(BeanDefinition clss : packageSet) {
 			tempApiNameList = clss.getBeanClassName().split("\\.");
 			apiName = tempApiNameList[tempApiNameList.length-1];
-//			apiNameList.add(apiName);
-			
-			if(apiName.indexOf("Controller") > -1) {
-				apiNameList.add(apiName);
-			}
+			apiNameList.add(apiName);
 		}
 		
-		return (ArrayList<String>) apiNameList;
+		return apiNameList;
 	}
 
 }

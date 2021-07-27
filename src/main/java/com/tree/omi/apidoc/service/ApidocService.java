@@ -1,8 +1,8 @@
 package com.tree.omi.apidoc.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface ApidocService {
-	void printApiList() throws Exception;
-	ArrayList<String> getApiName() throws Exception;
+	public void printApiList() throws Exception;
+	public List<String> getApiName() throws Exception;
 }
