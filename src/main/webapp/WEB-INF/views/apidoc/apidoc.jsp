@@ -45,6 +45,22 @@ function setApiList(data) {
 	})
 }
 
+function getApiInfo() {
+	$.ajax({
+		type : "POST",
+		url  : '/getApiInfo' ,
+		data : {},
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+		},
+		error : function(e) {
+			console.log(e);
+			alert(e);
+		}
+	});
+}
+
 $(document).ready(function(){
 	getApiList();
 }) ;

@@ -1,6 +1,10 @@
 package com.tree.omi.apidoc.service.impl;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,25 +35,62 @@ public class ApidocServiceImpl implements ApidocService {
 
 	@Override
 	public List<String> getApiName() throws Exception {
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
-		ControllerFilter myFilter = new ControllerFilter();
-		scanner.addExcludeFilter(myFilter);
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true); // useDefaultFilters : true -> stereotype Annotation 만 스캔 할 수있도록 해주는 param
+		ControllerFilter exceptNotControllerFilter = new ControllerFilter(); // 커스텀 필터 인스턴스 생성 -> 컨트롤러 클래스만 읽어오게끔 필터링 TypeFilter의 구현체
+		scanner.addExcludeFilter(exceptNotControllerFilter); // custom filter 적용
 		
 		Set<BeanDefinition> packageSet = new HashSet();
 		
-		packageSet = scanner.findCandidateComponents("/com/tree/omi");
+		packageSet = scanner.findCandidateComponents("/com/tree/omi"); // basepackage 하위의 모든 패키지를 대상으로 읽어온다
 		
 		List<String> apiNameList = new ArrayList<String>();
 		String[] tempApiNameList ;
 		String apiName = "";
 		
 		for(BeanDefinition clss : packageSet) {
-			tempApiNameList = clss.getBeanClassName().split("\\.");
-			apiName = tempApiNameList[tempApiNameList.length-1];
-			apiNameList.add(apiName);
+//			tempApiNameList = clss.getBeanClassName().split("\\."); //
+//			apiName = tempApiNameList[tempApiNameList.length-1];
+//			apiNameList.add(apiName);
+			apiNameList.add(clss.getBeanClassName());
 		}
 		
 		return apiNameList;
 	}
+
+	@Override
+	public HashMap<String,Object> getClassInfo(String className) throws Exception {
+		HashMap<String,Object> resultMap = new HashMap<String,Object>();
+		
+		System.out.println("==============================hiiiiiiiiiiiii");
+		
+		Class clzz = Class.forName(className);
+		Method[] methodArray = clzz.getMethods();
+		Field[] fieldArray = clzz.getFields();
+		Constructor[] constructorArray = clzz.getConstructors();
+		Class[] interfaceArray = clzz.getInterfaces();
+		Class superClass = clzz.getSuperclass();
+		
+		resultMap.put("method", methodArray);
+		resultMap.put("field", fieldArray);
+		resultMap.put("constructor", constructorArray);
+		resultMap.put("interface",interfaceArray);
+		
+		System.out.println("==============================byeiiiiiiiiiiii");
+		
+		return resultMap;
+	}
+
+	@Override
+	public HashMap<String, HashMap<String,Object>> getApiInfoList(List<String> paramList) throws Exception {
+		HashMap<String, HashMap<String,Object>> resultMap = new HashMap<String, HashMap<String,Object>>();
+		
+		for(String apiName : paramList) {
+			resultMap.put(apiName,getClassInfo(apiName));
+		}
+		
+		return resultMap;
+	}
+	
+	
 
 }
