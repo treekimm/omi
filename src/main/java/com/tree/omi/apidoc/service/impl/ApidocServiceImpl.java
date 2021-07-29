@@ -65,16 +65,20 @@ public class ApidocServiceImpl implements ApidocService {
 		
 		Class clzz = Class.forName(className);
 		Method[] methodArray = clzz.getMethods();
+		List methodList = new ArrayList<String>();
+		for(Method m : methodArray) {
+			methodList.add(m.getName());		// json 변환을 위해 string 타입 리스트로 다시 만들어준다.
+		}
 		Field[] fieldArray = clzz.getFields();
-		Constructor[] constructorArray = clzz.getConstructors();
-		Class[] interfaceArray = clzz.getInterfaces();
-		Class superClass = clzz.getSuperclass();
+		List fieldList = new ArrayList<String>();
 		
-		resultMap.put("method", methodArray);
-		resultMap.put("field", fieldArray);
-		resultMap.put("constructor", constructorArray);
-		resultMap.put("interface",interfaceArray);
+		for(Field f : fieldArray) {
+			fieldList.add(f.getName());
+		}
 		
+		resultMap.put("method", methodList);
+		resultMap.put("field", fieldList);
+
 		System.out.println("==============================byeiiiiiiiiiiii");
 		
 		return resultMap;
