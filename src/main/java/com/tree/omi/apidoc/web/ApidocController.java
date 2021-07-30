@@ -45,11 +45,12 @@ public class ApidocController extends BaseController{
 		
 		ApiInfoResponseDTO resultDTO = new ApiInfoResponseDTO();
 		
-		List<String> paramList = apidocService.getApiName();
+		List<String> apiList = apidocService.getApiName();
+		List<String> dtoList = apidocService.getDtoName();
 		
-		System.out.println("====================apiNamList size : "+ paramList.size());
-		
-		resultDTO.setResult(apidocService.getApiInfoList(paramList));
+		resultDTO.setApiNameList(apiList);
+		resultDTO.setDtoNameList(dtoList);
+		resultDTO.setResultMap(apidocService.getApiInfoList(dtoList));
 		
 		return responseView(request, resultDTO);
 	}

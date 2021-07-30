@@ -1,6 +1,5 @@
 package com.tree.omi.apidoc.service.impl;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.tree.omi.apidoc.service.ApidocService;
 import com.tree.omi.common.filter.ControllerFilter;
+import com.tree.omi.common.filter.DtoFilter;
 
 @Service("ApidocService")
 public class ApidocServiceImpl implements ApidocService {
@@ -44,43 +44,58 @@ public class ApidocServiceImpl implements ApidocService {
 		packageSet = scanner.findCandidateComponents("/com/tree/omi"); // basepackage 하위의 모든 패키지를 대상으로 읽어온다
 		
 		List<String> apiNameList = new ArrayList<String>();
-		String[] tempApiNameList ;
-		String apiName = "";
 		
 		for(BeanDefinition clss : packageSet) {
-//			tempApiNameList = clss.getBeanClassName().split("\\."); //
-//			apiName = tempApiNameList[tempApiNameList.length-1];
-//			apiNameList.add(apiName);
 			apiNameList.add(clss.getBeanClassName());
 		}
 		
 		return apiNameList;
 	}
+	
+
+	@Override
+	public List<String> getDtoName() throws Exception {
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);// useDefaultFilters : false -> 스캔하는 조건이 아무것도 없는 상태
+		DtoFilter includeNotDtoFilter = new DtoFilter();
+		scanner.addIncludeFilter(includeNotDtoFilter);
+		
+		Set<BeanDefinition> classSet = new HashSet<BeanDefinition>();
+		
+		classSet = scanner.findCandidateComponents("/com/tree/omi");
+		
+		List<String> dtoNameList = new ArrayList<String>();
+		
+		for(BeanDefinition dto : classSet) {
+			dtoNameList.add(dto.getBeanClassName());
+		}
+		
+		return dtoNameList;
+	}
+	
+	
 
 	@Override
 	public HashMap<String,Object> getClassInfo(String className) throws Exception {
 		HashMap<String,Object> resultMap = new HashMap<String,Object>();
 		
-		System.out.println("==============================hiiiiiiiiiiiii");
-		
 		Class clzz = Class.forName(className);
 		Method[] methodArray = clzz.getMethods();
+		Field[] fieldArray = clzz.getDeclaredFields(); //getFiled는 private 으로 되어있는 필드는 가져오지 못한다. .....
+		
 		List methodList = new ArrayList<String>();
 		for(Method m : methodArray) {
 			methodList.add(m.getName());		// json 변환을 위해 string 타입 리스트로 다시 만들어준다.
 		}
-		Field[] fieldArray = clzz.getFields();
+		
 		List fieldList = new ArrayList<String>();
 		
 		for(Field f : fieldArray) {
-			fieldList.add(f.getName());
+			fieldList.add(f.toString());
 		}
 		
 		resultMap.put("method", methodList);
 		resultMap.put("field", fieldList);
 
-		System.out.println("==============================byeiiiiiiiiiiii");
-		
 		return resultMap;
 	}
 
@@ -94,6 +109,7 @@ public class ApidocServiceImpl implements ApidocService {
 		
 		return resultMap;
 	}
+
 	
 	
 
