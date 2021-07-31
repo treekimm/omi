@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -80,7 +81,7 @@ public class ApidocServiceImpl implements ApidocService {
 		
 		Class clzz = Class.forName(className);
 		Method[] methodArray = clzz.getMethods();
-		Field[] fieldArray = clzz.getDeclaredFields(); //getFiled는 private 으로 되어있는 필드는 가져오지 못한다. .....
+		Field[] fieldArray = clzz.getDeclaredFields(); //getFiled는 private 으로 되어있는 필드는 가져오지 못한다. ..... getDeclaredFields로 변경
 		
 		List methodList = new ArrayList<String>();
 		for(Method m : methodArray) {
@@ -88,9 +89,10 @@ public class ApidocServiceImpl implements ApidocService {
 		}
 		
 		List fieldList = new ArrayList<String>();
-		
+		String[] fieldNameFullPath ;		
 		for(Field f : fieldArray) {
-			fieldList.add(f.toString());
+			fieldNameFullPath = f.toString().split("\\.");
+			fieldList.add(fieldNameFullPath[fieldNameFullPath.length-1].toString());
 		}
 		
 		resultMap.put("method", methodList);
@@ -101,10 +103,15 @@ public class ApidocServiceImpl implements ApidocService {
 
 	@Override
 	public HashMap<String, HashMap<String,Object>> getApiInfoList(List<String> paramList) throws Exception {
-		HashMap<String, HashMap<String,Object>> resultMap = new HashMap<String, HashMap<String,Object>>();
 		
-		for(String apiName : paramList) {
-			resultMap.put(apiName,getClassInfo(apiName));
+		HashMap<String, HashMap<String,Object>> resultMap = new HashMap<String, HashMap<String,Object>>();
+		HashMap<String,Object> classInfo = new HashMap<String,Object>();
+		
+		for(String clss : paramList) {
+			classInfo = getClassInfo(clss);
+			clss= clss.split("\\.")[clss.split("\\.").length-1].toString(); 
+			
+			resultMap.put(clss,classInfo);
 		}
 		
 		return resultMap;

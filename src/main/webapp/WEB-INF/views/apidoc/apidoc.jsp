@@ -52,7 +52,7 @@ function getApiInfo() {
 		data : {},
 		dataType : 'json',
 		success : function(data) {
-			console.log(data);
+			setApiInfoList(data);
 		},
 		error : function(e) {
 			console.log(e);
@@ -61,8 +61,22 @@ function getApiInfo() {
 	});
 }
 
+function setApiInfoList(data) {
+	console.log(data);
+	
+	var apiList ='';
+	apiList = $('#apiList');
+	console.log(apiList);
+	$.each(data.result.apiNameList, function(idx,item) {
+		apiList.append('<li>'+ item +'</li>');	
+		$.each(data.result.resultMap,function(idx,item){
+			apiList.append('<li>' + idx + ':' + item.method + ' ' + item.field + '</li>');
+		});
+	});
+}
+
 $(document).ready(function(){
-	getApiList();
+	getApiInfo();
 }) ;
 	
 

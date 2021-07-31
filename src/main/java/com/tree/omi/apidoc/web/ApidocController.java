@@ -1,5 +1,6 @@
 package com.tree.omi.apidoc.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -45,7 +46,12 @@ public class ApidocController extends BaseController{
 		
 		ApiInfoResponseDTO resultDTO = new ApiInfoResponseDTO();
 		
-		List<String> apiList = apidocService.getApiName();
+		List<String> apiPathList = apidocService.getApiName();
+		List<String> apiList = new ArrayList<String>() ;
+		for(String a : apiPathList) {
+			apiList.add(a.split("\\.")[a.split("\\.").length-1].toString());
+		}
+		
 		List<String> dtoList = apidocService.getDtoName();
 		
 		resultDTO.setApiNameList(apiList);
