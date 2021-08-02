@@ -1,8 +1,5 @@
 package com.tree.omi.apidoc.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,53 +8,32 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.tree.omi.apidoc.dto.ApiInfoResponseDTO;
-import com.tree.omi.apidoc.dto.ApidocResponseDTO;
+import com.tree.omi.apidoc.dto.ApiNameResponseDTO;
 import com.tree.omi.apidoc.service.ApidocService;
-import com.tree.omi.common.annotation.ApidocAnnotation;
 import com.tree.omi.common.base.BaseController;
 
-@ApidocAnnotation
-@Controller("ApidocController")
+@Controller
 public class ApidocController extends BaseController{
-	
-	@Resource(name = "ApidocService")
+
+	@Resource(name="ApidocService")
 	private ApidocService apidocService;
 	
-	
-	@RequestMapping(value = "/apidoc")
-	public ModelAndView apidoc(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView)throws Exception {
-
+	@RequestMapping(value="/apidoc")
+	public ModelAndView Apidoc (HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
+		
+		
+		
 		return responseView(request, "/apidoc/apidoc");
 	}
 	
-	@RequestMapping(value = "/getApidocList")
-	public ModelAndView getApidocList(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
+	@RequestMapping(value = "/apidoc/getApiName")
+	public ModelAndView ApiName (HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
 		
-		ApidocResponseDTO resultDTO = new ApidocResponseDTO();
+		ApiNameResponseDTO result = new ApiNameResponseDTO();
 		
-		resultDTO.setApiList(apidocService.getApiName());
+		result.setName(apidocService.getApinName(request));
 		
-		return responseView(request, resultDTO);
+		return responseView(request, result);
 	}
 	
-	@RequestMapping(value = "/getApiInfo")
-	public ModelAndView getApiInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
-		
-		ApiInfoResponseDTO resultDTO = new ApiInfoResponseDTO();
-		
-		List<String> apiPathList = apidocService.getApiName();
-		List<String> apiList = new ArrayList<String>() ;
-		for(String a : apiPathList) {
-			apiList.add(a.split("\\.")[a.split("\\.").length-1].toString());
-		}
-		
-		List<String> dtoList = apidocService.getDtoName();
-		
-		resultDTO.setApiNameList(apiList);
-		resultDTO.setDtoNameList(dtoList);
-		resultDTO.setResultMap(apidocService.getApiInfoList(dtoList));
-		
-		return responseView(request, resultDTO);
-	}
 }

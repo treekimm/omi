@@ -1,4 +1,4 @@
-package com.tree.omi.apidoc.dto;
+package com.tree.omi.testapidoc.dto;
 
 import java.util.HashMap;
 import java.util.List;

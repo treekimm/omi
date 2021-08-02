@@ -8,7 +8,7 @@ import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.TypeFilter;
 
-public class ControllerFilter implements TypeFilter{
+public class TestDtoFilter implements TypeFilter{
 
 	@Override
 	public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory)
@@ -17,7 +17,7 @@ public class ControllerFilter implements TypeFilter{
 		AnnotationMetadata anootationMetadata = metadataReader.getAnnotationMetadata() ; 
 		Set<String> annotationSet = anootationMetadata.getAnnotationTypes();
 		
-		if(!annotationSet.contains("org.springframework.stereotype.Controller")) {
+		if(annotationSet.contains("com.tree.omi.common.annotation.DtoAnnotation")) {
 			return true;
 		}
 		
