@@ -21,7 +21,7 @@
 function getApiList() {
 	$.ajax({
 		type : "POST",
-		url  : '/getApidocList' ,
+		url  : '/apidoc/getApiName' ,
 		data : {},
 		dataType : 'json',
 		success : function(data) {
@@ -40,7 +40,7 @@ function setApiList(data) {
 	var apiList ='';
 	apiList = $('#apiList');
 	console.log(apiList);
-	$.each(data.result.apiList, function(idx,item) {
+	$.each(data.result.name, function(idx,item) {
 		apiList.append('<li>'+ item +'</li>');	
 	})
 }
@@ -76,7 +76,7 @@ function setApiInfoList(data) {
 }
 
 $(document).ready(function(){
-	getApiInfo();
+	getApiList();
 }) ;
 	
 

@@ -1,5 +1,8 @@
 package com.tree.omi.apidoc.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,8 +33,14 @@ public class ApidocController extends BaseController{
 	public ModelAndView ApiName (HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
 		
 		ApiNameResponseDTO result = new ApiNameResponseDTO();
+		List<String> nameList = apidocService.getApiList(request);
 		
-		result.setName(apidocService.getApinName(request));
+		List<String> resultList = new ArrayList<String>();
+		for(String name : nameList) {
+			resultList.add(name.split("\\.")[name.split("\\.").length-1].toString());
+		}
+		
+		result.setName(resultList);
 		
 		return responseView(request, result);
 	}

@@ -18,7 +18,6 @@ import com.tree.omi.testapidoc.dto.ApidocResponseDTO;
 import com.tree.omi.testapidoc.service.ApidocService;
 
 @ApidocAnnotation
-@Controller("ApidocController")
 public class ApidocController extends BaseController{
 	
 	@Resource(name = "ApidocService")

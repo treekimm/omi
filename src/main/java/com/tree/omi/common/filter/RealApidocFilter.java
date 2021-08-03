@@ -40,11 +40,11 @@ public class RealApidocFilter extends ApidocFilter{
 				return true;
 			}
 			
-		} else if (filterType.equals("CLASS")) {
+		} else if (filterType.equals("CLASS")) {	// 내부에서만 사용되는 패키지는 제외한다
 			ClassMetadata metaData = metadataReader.getClassMetadata();
 			String className = metaData.getClassName();
 			
-			if(!(className.contains("com.tree.omi.common") || className.contains("com.tree.omi.test") || className.contains("com.tree.omi.apidoc"))) {
+			if((className.contains("com.tree.omi.common") || className.contains("com.tree.omi.test") || className.contains("com.tree.omi.apidoc") || className.contains("com.tree.omi.view"))) {
 				return true;
 			}
 			
