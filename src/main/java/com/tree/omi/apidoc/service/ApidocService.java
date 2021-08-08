@@ -1,10 +1,14 @@
 package com.tree.omi.apidoc.service;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 public interface ApidocService {
-	public List<String> getApiList(HttpServletRequest request)throws Exception;
+	public List<Method> getApiList(String className)throws Exception;
 	public List<String> getControllerList(HttpServletRequest request)throws Exception;
+	public List<Class> getApiParamList(Method method) throws Exception;
+	public List<HashMap<String,String>> getDtoField(Class dto) throws Exception;
 }

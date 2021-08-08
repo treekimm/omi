@@ -1,9 +1,10 @@
 package com.tree.omi.apidoc.service.impl;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -20,7 +21,21 @@ import com.tree.omi.common.filter.RealApidocFilter;
 public class ApidocServiceImpl implements ApidocService{
 
 	@Override
-	public List<String> getApiList(HttpServletRequest request) throws Exception {
+	public List<Method> getApiList(String className) throws Exception {
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
+		List<Method> apiList = new ArrayList<Method>();
+		
+			Class clzz = Class.forName(className);
+			Method[] methods = clzz.getDeclaredMethods();
+			
+			for(Method method : methods) {
+				apiList.add(method);
+			}
+		return apiList;
+	}
+	
+	@Override
+	public List<String> getControllerList(HttpServletRequest request) throws Exception {
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
 		RealApidocFilter controllerFilter = new RealApidocFilter("ANNOTATION","CONTROLLER");
 		RealApidocFilter classFilter = new RealApidocFilter("CLASS");
@@ -28,48 +43,45 @@ public class ApidocServiceImpl implements ApidocService{
 		scanner.addExcludeFilter(controllerFilter);
 		scanner.addExcludeFilter(classFilter);
 		
-		Set<BeanDefinition> classSet = new HashSet();
+		Set<BeanDefinition> classSet = scanner.findCandidateComponents("/com/tree/omi/api"); // basepackage 하위의 모든 패키지를 대상으로 읽어온다
 		
-		classSet = scanner.findCandidateComponents("/com/tree/omi"); // basepackage 하위의 모든 패키지를 대상으로 읽어온다
-		
-		List<String> apiNameList = new ArrayList<String>();
+		List<String> controllerNameList = new ArrayList<String>();
 		
 		for(BeanDefinition clss : classSet) {
-			Class clzz = Class.forName(clss.getBeanClassName());
-			Method[] methods = clzz.getDeclaredMethods();
-			
-			for(Method method : methods) {
-				apiNameList.add(method.getName());
-				for(Parameter param : method.getParameters()) {
-					apiNameList.add(param.getType().toString());
-				}
-				
-			}
+			controllerNameList.add(clss.getBeanClassName());
 		}
-		return apiNameList;
+		
+		return controllerNameList;
+	
 	}
 	
 	@Override
-	public List<String> getControllerList(HttpServletRequest request) throws Exception {
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
-		RealApidocFilter controllerFilter = new RealApidocFilter("ANNOTATION","CONTROLLER");
+	public List<Class> getApiParamList(Method method) throws Exception {
 		
-		scanner.addExcludeFilter(controllerFilter);
+		List<Class> resultList = new ArrayList<Class>();
 		
-		Set<BeanDefinition> classSet = new HashSet();
-		
-		classSet = scanner.findCandidateComponents("/com/tree/omi/api"); // basepackage 하위의 모든 패키지를 대상으로 읽어온다
-		
-		List<String> apiNameList = new ArrayList<String>();
-		
-		for(BeanDefinition clss : classSet) {
-			apiNameList.add(clss.getBeanClassName());
+		for(Parameter param : method.getParameters()) {
+			resultList.add(param.getType());
 		}
 		
-		return apiNameList;
-	
+		return resultList;
 	}
-	
-	
+
+	@Override
+	public List<HashMap<String,String>> getDtoField(Class dto) throws Exception {
+		
+		HashMap<String,String> tempMap = new HashMap<String,String>();
+		List<HashMap<String,String>> resultList = new ArrayList<HashMap<String,String>>();
+		
+		for(Field field : dto.getDeclaredFields()) {
+			System.out.println("filed name : " + field.getName() + "filed type : " + field.getType().toString());
+			tempMap.put(field.getName(), field.getType().toString());
+			resultList.add(tempMap);
+			tempMap.clear();
+		}
+		
+		return resultList;
+	}
+
 
 }

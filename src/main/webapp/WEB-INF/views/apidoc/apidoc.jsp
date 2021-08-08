@@ -34,6 +34,22 @@ function getApiList() {
 	});
 }
 
+function getApiInfo() {
+	$.ajax({
+		type : "POST",
+		url  : '/apidoc/getApiInfo' ,
+		data : {},
+		dataType : 'json',
+		success : function(data) {
+			console.log(data);
+		},
+		error : function(e) {
+			console.log(e);
+			alert(e);
+		}
+	});
+}
+
 function setApiList(data) {
 	console.log(data);
 	
@@ -45,7 +61,7 @@ function setApiList(data) {
 	})
 }
 
-function getApiInfo() {
+/* function getApiInfo() {
 	$.ajax({
 		type : "POST",
 		url  : '/getApiInfo' ,
@@ -59,7 +75,7 @@ function getApiInfo() {
 			alert(e);
 		}
 	});
-}
+} */
 
 function setApiInfoList(data) {
 	console.log(data);
