@@ -14,6 +14,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.stereotype.Service;
 
+import com.tree.omi.apidoc.dto.ControllerListResponseDTO;
+import com.tree.omi.apidoc.dto.ControllerListSubResponseDTO;
 import com.tree.omi.apidoc.service.ApidocService;
 import com.tree.omi.common.filter.RealApidocFilter;
 
@@ -35,7 +37,7 @@ public class ApidocServiceImpl implements ApidocService{
 	}
 	
 	@Override
-	public List<String> getControllerList(HttpServletRequest request) throws Exception {
+	public List<ControllerListSubResponseDTO> getControllerList(HttpServletRequest request) throws Exception {
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
 		RealApidocFilter controllerFilter = new RealApidocFilter("ANNOTATION","CONTROLLER");
 		RealApidocFilter classFilter = new RealApidocFilter("CLASS");
@@ -45,10 +47,25 @@ public class ApidocServiceImpl implements ApidocService{
 		
 		Set<BeanDefinition> classSet = scanner.findCandidateComponents("/com/tree/omi/api"); // basepackage 하위의 모든 패키지를 대상으로 읽어온다
 		
-		List<String> controllerNameList = new ArrayList<String>();
+		ControllerListResponseDTO result = new ControllerListResponseDTO();
 		
+		List<ControllerListSubResponseDTO> controllerNameList = new ArrayList<ControllerListSubResponseDTO>();
+		
+		String controllerName = "";
+		String controllerPath = "";
 		for(BeanDefinition clss : classSet) {
-			controllerNameList.add(clss.getBeanClassName());
+			ControllerListSubResponseDTO tempControllerInfo = new ControllerListSubResponseDTO();
+			
+			controllerPath = clss.getBeanClassName();
+			controllerName = controllerPath.split("\\.")[controllerPath.split("\\.").length-1].toString();  
+			
+			tempControllerInfo.setControllerName(controllerName);
+			tempControllerInfo.setControllerPath(controllerPath);
+			
+			controllerNameList.add(tempControllerInfo);
+			
+			controllerPath = "";
+			controllerName = "";
 		}
 		
 		return controllerNameList;
